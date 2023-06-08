@@ -1,9 +1,11 @@
-from prepare_data_common import __generate_random_string, __write_to_file, __warnings_filter
+import urllib3
+
+from prepare_data_common import __generate_random_string, __write_to_file
 from util.api.bamboo_clients import BambooClient
 from util.conf import BAMBOO_SETTINGS
 from util.project_paths import BAMBOO_BUILD_PLANS, BAMBOO_USERS
 
-__warnings_filter()
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BUILD_PLANS = 'plans'
 USERS = 'users'

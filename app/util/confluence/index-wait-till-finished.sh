@@ -18,9 +18,7 @@ echo "Confluence Version: ${CONFLUENCE_VERSION}"
 if [ "$(sudo su confluence -c "ls -l ""$SEARCH_LOG"" 2>/dev/null | wc -l")" -gt 0 ]
 then
   echo "Log files were found:"
-  # get all logs files as string without newline chars and sorted by last edit time oldest to newest
-  LOG_FILE_NAMES=$(sudo su confluence -c "ls -tr $SEARCH_LOG | tr '\n' ' '")
-  echo "$LOG_FILE_NAMES"
+  sudo su confluence -c "ls $SEARCH_LOG"
 else
   echo "ERROR: There are no log files found like $SEARCH_LOG"
   echo "Make sure your Confluence version is 7.7.x or higher."
@@ -33,7 +31,7 @@ SLEEP_TIME=60
 ATTEMPTS=$((TIMEOUT / SLEEP_TIME))
 
 while [ ${COUNTER} -lt ${ATTEMPTS} ];do
-  grep_result=$(sudo su -c "grep -h -o \"$PROGRESS\" $LOG_FILE_NAMES" 2>/dev/null | tail -1)
+  grep_result=$(sudo su -c "grep -h -o \"$PROGRESS\" $SEARCH_LOG" 2>/dev/null | tail -1)
   echo "Status:"
   echo "$grep_result"
   if [ -z "$grep_result" ];then

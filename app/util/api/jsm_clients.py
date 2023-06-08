@@ -55,7 +55,8 @@ class JsmRestClient(RestClient):
 
         return response.json()
 
-    def create_request(self, service_desk_id: int, request_type_id: int, raise_on_behalf_of: str):
+    def create_request(self, service_desk_id: int, request_type_id: int,
+                       request_fields_values: dict, request_participants: list, raise_on_behalf_of: str):
         """
         Creates a customer request in a service desk.
         :param service_desk_id:
@@ -69,9 +70,8 @@ class JsmRestClient(RestClient):
         payload = {
             "serviceDeskId": service_desk_id,
             "requestTypeId": request_type_id,
-            "requestFieldValues": {
-                "description": "I need a new request",
-                "summary": "Request via REST"},
+            "requestFieldValues": request_fields_values,
+            "requestParticipants": request_participants,
             "raiseOnBehalfOf": raise_on_behalf_of
         }
         jsm_headers = JSM_EXPERIMENTAL_HEADERS
@@ -363,11 +363,3 @@ class JsmRestClient(RestClient):
         if max_count:
             return results[:max_count]
         return results
-
-    def get_all_schemas(self):
-        objectschemas = []
-        api_url = self.host + "/rest/insight/1.0/objectschema/list?"
-        r = self.get(api_url,
-                     f"Could not get objectSchemas id").json()
-        objectschemas.extend(r['objectschemas'])
-        return objectschemas
